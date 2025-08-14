@@ -48,7 +48,9 @@ jobs:
             libpng-dev \
             libopenjp2-7 \
             libhdf5-dev \
-            python3-setuptools
+            python3-setuptools \
+            libtool \
+            autoconf
 
       - name: Install Buildozer and core dependencies
         # Install the buildozer tool, Cython, and Pillow using pip.
@@ -56,7 +58,6 @@ jobs:
 
       - name: Create buildozer.spec file
         # This step overwrites the buildozer.spec file with a clean, correct version.
-        # This is a robust way to ensure the file is correctly configured.
         run: |
           cat <<EOF > buildozer.spec
           [app]
