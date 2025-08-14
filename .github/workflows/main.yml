@@ -1,0 +1,80 @@
+# .github/workflows/build-apk.yml
+
+# This workflow builds a Kivy Android app using Buildozer.
+# It is triggered on a push to the 'main' branch.
+
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        # Action to check out your project's code from the repository.
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        # Action to set up Python, which is required for Kivy and Buildozer.
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Buildozer dependencies
+        # Install the system dependencies required by Buildozer on Ubuntu.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            git \
+            python3-pip \
+            libsdl2-dev \
+            libsdl2-image-dev \
+            libsdl2-mixer-dev \
+            libsdl2-ttf-dev \
+            pkg-config \
+            zlib1g-dev \
+            libncursesw5-dev \
+            libssl-dev \
+            libffi-dev \
+            libgstreamer1.0-dev \
+            gstreamer1.0-plugins-base \
+            libjpeg-dev \
+            libpng-dev \
+            libopenjp2-7 \
+            libhdf5-dev \
+            python3-setuptools
+
+      - name: Install Buildozer
+        # Install the buildozer tool using pip.
+        run: pip install buildozer
+
+      - name: Initialize Buildozer spec file
+        # Generate the default buildozer.spec file.
+        run: buildozer init
+
+      - name: Modify Buildozer spec file
+        # Update the buildozer.spec file with app-specific details.
+        # This is a critical step.
+        run: |
+          sed -i 's/^title = My Application/title = PyCam/' buildozer.spec
+          sed -i 's/^package.name = myapp/package.name = pycam/' buildozer.spec
+          sed -i 's/^requirements = python3,kivy/requirements = python3,kivy/' buildozer.spec
+
+      - name: Build Android APK
+        # Run Buildozer to compile the app and create the APK.
+        # This will download the Android SDK and NDK, which can take a while.
+        run: buildozer -v android debug
+
+      - name: Upload APK artifact
+        # This step saves the generated APK file to the GitHub Action workflow.
+        # You can download it from the 'Actions' tab of your repository.
+        uses: actions/upload-artifact@v4
+        with:
+          name: pycam-apk
+          path: bin/*.apk
