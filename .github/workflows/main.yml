@@ -50,9 +50,9 @@ jobs:
             libhdf5-dev \
             python3-setuptools
 
-      - name: Install Buildozer
-        # Install the buildozer tool using pip.
-        run: pip install buildozer
+      - name: Install Buildozer and core dependencies
+        # Install the buildozer tool, Cython, and Pillow using pip.
+        run: pip install buildozer cython pillow
 
       - name: Initialize Buildozer spec file
         # Generate the default buildozer.spec file.
@@ -60,11 +60,10 @@ jobs:
 
       - name: Modify Buildozer spec file
         # Update the buildozer.spec file with app-specific details.
-        # This is a critical step.
         run: |
           sed -i 's/^title = My Application/title = PyCam/' buildozer.spec
           sed -i 's/^package.name = myapp/package.name = pycam/' buildozer.spec
-          sed -i 's/^requirements = python3,kivy/requirements = python3,kivy/' buildozer.spec
+          sed -i 's/^requirements = python3,kivy/requirements = python3,kivy,pillow/' buildozer.spec
 
       - name: Build Android APK
         # Run Buildozer to compile the app and create the APK.
