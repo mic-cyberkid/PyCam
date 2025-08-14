@@ -1,1 +1,21 @@
+<GalleryScreen>:
+    name: 'gallery_screen'
+    BoxLayout:
+        orientation: 'vertical'
 
+        # This is where our images will be displayed
+        ScrollView:
+            GridLayout:
+                id: image_grid
+                cols: 3
+                spacing: '5dp'
+                padding: '5dp'
+                size_hint_y: None
+                height: self.minimum_height
+
+        # Button to return to the camera
+        Button:
+            text: 'Back to Camera'
+            size_hint_y: None
+            height: '48dp'
+            on_press: root.manager.current = 'camera_screen'
