@@ -1,1 +1,34 @@
+<CameraScreen>:
+    name: 'camera_screen'
+    BoxLayout:
+        orientation: 'vertical'
 
+        # The Camera widget
+        Camera:
+            id: camera
+            resolution: (640, 480)
+            play: False
+
+        # The control panel for the camera
+        BoxLayout:
+            size_hint_y: None
+            height: '48dp'
+            padding: '4dp'
+            spacing: '4dp'
+
+            Button:
+                text: 'Capture'
+                on_press: root.capture_photo()
+
+            ToggleButton:
+                id: toggle_button
+                text: 'Start'
+                on_press:
+                    # Toggle the camera's play property
+                    camera.play = not camera.play
+                    # Update the button text
+                    self.text = 'Stop' if camera.play else 'Start'
+
+            Button:
+                text: 'Gallery'
+                on_press: root.manager.current = 'gallery_screen'
